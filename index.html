@@ -51,8 +51,8 @@ border-radius:var(--radius);
 box-shadow:var(--shadow);
 overflow:hidden;
 
-/* minder ruimte onderaan */
-padding:24px 18px 260px;
+/* ruimte voor zee */
+padding:24px 18px 200px;
 }
 
 /* profiel */
@@ -187,10 +187,14 @@ width:38px;
 /* CONTACT BUTTON */
 
 .save-wrap{
-max-width:360px;
+position:absolute;
 
-/* iets lager maar minder ruimte */
-margin:55px auto 0;
+/* knop net boven golven */
+left:40px;
+right:40px;
+bottom:100px;
+
+z-index:5;
 }
 
 .btn{
