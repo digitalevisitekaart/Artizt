@@ -180,6 +180,8 @@ padding:16px;
 
 .qlink img{
 width:60px;
+height:60px;
+object-fit:contain;
 }
 
 /* CONTACT BUTTON */
@@ -208,6 +210,8 @@ gap:10px;
 
 .btn img{
 width:20px;
+height:20px;
+object-fit:contain;
 }
 
 /* ZEE */
@@ -263,34 +267,34 @@ transform:translate3d(-50%,0,0);
 
 <div class="profile">
 <div class="avatar">
-<img src="profielfoto.png">
+<img src="profielfoto.png" alt="Profielfoto">
 </div>
 </div>
 
 <div class="brand">Artizt</div>
-<div class="name">Kim & Yassine</div>
-<div class="subtitle">Hair & Beauty salon</div>
+<div class="name">Kim &amp; Yassine</div>
+<div class="subtitle">Hair &amp; Beauty salon</div>
 
 <div class="tiles">
 
 <a class="tile" href="tel:+32477376121">
-<div class="tile-ico"><img src="telefoon.png"></div>
+<div class="tile-ico"><img src="telefoon.png" alt=""></div>
 <div>
 <div class="tile-title">Bel nu</div>
 <div class="tile-value">+32 477 37 61 21</div>
 </div>
 </a>
 
-<a class="tile" href="https://www.artizt.be/" target="_blank">
-<div class="tile-ico"><img src="website.png"></div>
+<a class="tile" href="https://www.artizt.be/" target="_blank" rel="noopener">
+<div class="tile-ico"><img src="website.png" alt=""></div>
 <div>
 <div class="tile-title">Website</div>
 <div class="tile-sub">www.artizt.be</div>
 </div>
 </a>
 
-<a class="tile" href="https://www.google.com/maps?q=Molenstraat%203%209255%20Opstal" target="_blank">
-<div class="tile-ico"><img src="locatie.png"></div>
+<a class="tile" href="https://www.google.com/maps?q=Molenstraat%203%209255%20Opstal" target="_blank" rel="noopener">
+<div class="tile-ico"><img src="locatie.png" alt=""></div>
 <div>
 <div class="tile-title">Adres</div>
 <div class="tile-sub">Molenstraat 3<br>9255 Opstal</div>
@@ -301,35 +305,87 @@ transform:translate3d(-50%,0,0);
 
 <div class="quicklinks">
 
-<a class="qlink" href="https://booking.optios.net/11902/menu" target="_blank">
-<img src="afspraak.png">
+<a class="qlink" href="https://booking.optios.net/11902/menu" target="_blank" rel="noopener">
+<img src="afspraak.png" alt="">
 Maak een afspraak
 </a>
 
-<a class="qlink" href="https://be.babor.com/institute/artizthairenbeauty" target="_blank">
-<img src="webshop.png">
-Bezoek <br/> webshop
+<a class="qlink" href="https://be.babor.com/institute/artizthairenbeauty" target="_blank" rel="noopener">
+<img src="webshop.png" alt="">
+Bezoek <br> webshop
 </a>
 
 </div>
 
 <div class="save-wrap">
-<button class="btn">
-<img src="toevoegen.png">
+<button class="btn" id="saveContact" type="button">
+<img src="toevoegen.png" alt="">
 Contact opslaan
 </button>
 </div>
 
-<div class="sea">
-<img class="wave-img w1" src="golf5.png">
-<img class="wave-img w2" src="golf4.png">
-<img class="wave-img w3" src="golf3.png">
-<img class="wave-img w4" src="golf2.png">
-<img class="wave-img w5" src="golf1.png">
+<div class="sea" aria-hidden="true">
+<img class="wave-img w1" src="golf5.png" alt="">
+<img class="wave-img w2" src="golf4.png" alt="">
+<img class="wave-img w3" src="golf3.png" alt="">
+<img class="wave-img w4" src="golf2.png" alt="">
+<img class="wave-img w5" src="golf1.png" alt="">
 </div>
 
 </div>
 </div>
+
+<script>
+const CONTACT = {
+  firstName: "Kim",
+  lastName: "Yassine",
+  org: "Artizt",
+  title: "Hair & Beauty salon",
+  phone: "+32 477 37 61 21",
+  website: "https://www.artizt.be/",
+  addressLabel: "Molenstraat 3, 9255 Opstal, België"
+};
+
+function escapeVCardValue(value) {
+  return String(value)
+    .replace(/\\/g, "\\\\")
+    .replace(/\n/g, "\\n")
+    .replace(/,/g, "\\,")
+    .replace(/;/g, "\\;");
+}
+
+function makeVCard(c){
+  const lines = [
+    "BEGIN:VCARD",
+    "VERSION:3.0",
+    `N:${escapeVCardValue(c.lastName)};${escapeVCardValue(c.firstName)};;;`,
+    `FN:${escapeVCardValue(c.firstName + " " + c.lastName)}`,
+    c.org ? `ORG:${escapeVCardValue(c.org)}` : "",
+    c.title ? `TITLE:${escapeVCardValue(c.title)}` : "",
+    c.phone ? `TEL;TYPE=CELL,VOICE:${escapeVCardValue(c.phone)}` : "",
+    c.website ? `URL:${escapeVCardValue(c.website)}` : "",
+    c.addressLabel ? `ADR;TYPE=WORK:;;${escapeVCardValue(c.addressLabel)};;;;` : "",
+    "END:VCARD"
+  ].filter(Boolean);
+
+  return lines.join("\r\n");
+}
+
+document.getElementById("saveContact").addEventListener("click", () => {
+  const vcf = makeVCard(CONTACT);
+  const blob = new Blob([vcf], { type: "text/vcard;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "Artizt_Kim_Yassine.vcf";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+});
+</script>
 
 </body>
 </html>
